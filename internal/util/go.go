@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"runtime/debug"
 )
 
 // Go is a basic promise implementation: it wraps calls a function in a goroutine
@@ -81,4 +82,13 @@ func SafeGoWithError(fn func() error, errHandler func(error)) {
 			errHandler(err)
 		}
 	}()
+}
+
+// Recover use：defer util.Recover()()
+func Recover() func() {
+	return func() {
+		if err := recover(); err != nil {
+			debug.PrintStack()
+		}
+	}
 }

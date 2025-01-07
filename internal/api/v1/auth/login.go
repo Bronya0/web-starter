@@ -3,7 +3,7 @@ package auth
 import (
 	"gin-starter/internal/model/req"
 	"gin-starter/internal/model/resp"
-	"gin-starter/internal/service/auth"
+	"gin-starter/internal/service"
 	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 )
@@ -17,13 +17,13 @@ func Login(c *gin.Context) {
 		return
 	}
 	// 验证用户名和密码
-	user, err := auth.CheckUser(login.Username, login.Password)
+	user, err := service.CheckUser(login.Username, login.Password)
 	if err != nil {
 		resp.Error(c, "用户名或密码错误", nil)
 		return
 	}
 	// 黑名单。从redis里检索set，存在则返回错误
-	isBlacklisted, err := auth.CheckBlacklist(login.Username)
+	isBlacklisted, err := service.CheckBlacklist(login.Username)
 	if err != nil {
 		resp.Error(c, "服务器内部错误", nil)
 		return
@@ -33,7 +33,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	// 生成JWT
-	tokenString, err := auth.GenToken(user.Id)
+	tokenString, err := service.GenToken(user.Id)
 	if err != nil {
 		glog.Log.Error("生成token失败", err)
 		return

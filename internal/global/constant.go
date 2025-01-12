@@ -1,17 +1,20 @@
 package global
 
 import (
+	"crypto/tls"
 	"github.com/go-resty/resty/v2"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 	"os"
+	"time"
 )
 
 var (
-	DB *gorm.DB
-
+	DB         *gorm.DB
 	RootPath   = getWorkDir()
-	HttpClient = resty.New()
+	HttpClient = initHttpClient()
+	Cache      = make(map[string]any)
 )
 
 // 这里定义的常量，一般是具有错误代码+错误说明组成，一般用于接口返回
@@ -23,4 +26,13 @@ func getWorkDir() string {
 		log.Fatal(err)
 	}
 	return wd
+}
+
+func initHttpClient() *resty.Client {
+	return resty.New().
+		SetTransport(&http.Transport{
+			MaxIdleConnsPerHost: 10,
+		}).
+		SetTimeout(60 * time.Second).
+		SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 }

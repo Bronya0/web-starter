@@ -2,6 +2,7 @@ package gredis
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"gin-starter/internal/config"
 	"sync"
@@ -71,6 +72,23 @@ func (r *RedisClient) Get(key string) (string, error) {
 // Set 设置键值
 func (r *RedisClient) Set(key string, value interface{}, expiration time.Duration) error {
 	return r.Client.Set(r.ctx, key, value, expiration).Err()
+}
+
+// GetOrSet 获取键值，如果键不存在则设置默认值并返回
+func (r *RedisClient) GetOrSet(key string, defaultValue interface{}, expiration time.Duration) (string, error) {
+	value, err := r.Get(key)
+	if errors.Is(err, redis.Nil) {
+		// 键不存在，设置默认值
+		err = r.Set(key, defaultValue, expiration)
+		if err != nil {
+			return "", err
+		}
+		return fmt.Sprintf("%v", defaultValue), nil
+	} else if err != nil {
+		// 其他错误
+		return "", err
+	}
+	return value, nil
 }
 
 // Delete 删除键
@@ -160,33 +178,4 @@ func (r *RedisClient) TryLock(key string, expiration time.Duration, retryTimes i
 		time.Sleep(retryDelay)
 	}
 	return false, nil
-}
-
-// Cache 缓存装饰器
-type CacheOption struct {
-	Expiration  time.Duration
-	ForceUpdate bool
-}
-
-// GetOrSet 获取缓存，不存在则设置
-func (r *RedisClient) GetOrSet(key string, fn func() (interface{}, error), opt *CacheOption) (string, error) {
-	if !opt.ForceUpdate {
-		// 尝试从缓存获取
-		if val, err := r.Get(key); err == nil {
-			return val, nil
-		}
-	}
-
-	// 获取新数据
-	val, err := fn()
-	if err != nil {
-		return "", err
-	}
-
-	// 设置缓存
-	if err := r.Set(key, val, opt.Expiration); err != nil {
-		return "", err
-	}
-
-	return fmt.Sprint(val), nil
 }

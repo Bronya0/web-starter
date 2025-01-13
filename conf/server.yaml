@@ -45,3 +45,9 @@ redis:
   idleTimeout: 300
   poolSize: 100
   minIdleConns: 5
+
+mail:
+  host: smtp.qq.com
+  port: 465
+  username:
+  password:

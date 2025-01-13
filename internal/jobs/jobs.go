@@ -12,7 +12,7 @@ func InitCronJob() {
 	s := initScheduler()
 
 	// 添加一个每10秒执行一次的任务
-	//addJob(s, "print1", "*/10 * * * * *", PrintJob)
+	//addJob(s, "PingUrl", "*/10 * * * * *", Ping)
 
 	// 启动调度器
 	start(s)
@@ -64,7 +64,7 @@ func start(s *gocron.Scheduler) {
 
 func jobRecover() gocron.EventListener {
 	return gocron.AfterJobRunsWithPanic(func(jobID uuid.UUID, jobName string, recoverData any) {
-		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %v\n", jobName, jobID, recoverData)
+		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
 	})
 }
 

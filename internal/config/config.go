@@ -23,6 +23,7 @@ type Config struct {
 	Logs      Logs      `yaml:"Logs"`
 	Jwt       Jwt       `yaml:"Jwt"`
 	Websocket Websocket `yaml:"Websocket"`
+	Mail      Mail      `yaml:"mail"`
 }
 
 type Server struct {
@@ -76,4 +77,10 @@ type Websocket struct {
 	MaxMessageSize        int `yaml:"MaxMessageSize"`
 	PingPeriod            int `yaml:"PingPeriod"`
 	HeartbeatFailMaxTimes int `yaml:"HeartbeatFailMaxTimes"`
+}
+type Mail struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
 }

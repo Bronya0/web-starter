@@ -32,12 +32,4 @@ func Test(t *testing.T) {
 		// 执行需要加锁的操作
 	}
 
-	// 缓存装饰器使用
-	val, err = rdb.GetOrSet("cached_key", func() (interface{}, error) {
-		// 这里是获取数据的函数
-		return "cached_value", nil
-	}, &CacheOption{
-		Expiration:  1 * time.Hour,
-		ForceUpdate: false,
-	})
 }

@@ -1,15 +1,27 @@
 package jobs
 
 import (
+	"fmt"
+	"gin-starter/internal/config"
+	"gin-starter/internal/global"
+	"gin-starter/internal/model"
 	"gin-starter/internal/util/glog"
 	"github.com/go-co-op/gocron/v2"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
+	"reflect"
+	"runtime"
 	"time"
 )
 
 func InitCronJob() {
 	// 创建一个新的调度器
 	s := initScheduler()
+
+	// 初始化表
+	if config.GloConfig.DB.Enable {
+		model.AutoMigrateJobs()
+	}
 
 	// 添加一个每10秒执行一次的任务
 	//addJob(s, "PingUrl", "*/10 * * * * *", Ping)
@@ -22,6 +34,11 @@ func InitCronJob() {
 func addJob(s *gocron.Scheduler, jobName string, crontab string, function any, parameters ...any) {
 	// 超时请自己在任务中处理，不在外面做。
 	scheduler := *s
+
+	if config.GloConfig.DB.Enable {
+		saveOrUpdate(jobName, crontab, function)
+	}
+
 	_, err := scheduler.NewJob(
 		gocron.CronJob(
 			crontab,
@@ -31,9 +48,9 @@ func addJob(s *gocron.Scheduler, jobName string, crontab string, function any, p
 			function,
 			parameters...,
 		),
-		gocron.WithEventListeners(jobRecover()),
+		gocron.WithEventListeners(panicListener(), beforeListener(), afterListener()),
 		gocron.WithName(jobName),
-		gocron.WithTags(jobName),                             // 用于s删除
+		gocron.WithTags(jobName, getFunctionName(function)),  // 用于删除
 		gocron.WithSingletonMode(gocron.LimitModeReschedule), // 避免重叠运行
 	)
 
@@ -62,13 +79,104 @@ func start(s *gocron.Scheduler) {
 	glog.Log.Info("定时任务启动成功...")
 }
 
-func jobRecover() gocron.EventListener {
-	return gocron.AfterJobRunsWithPanic(func(jobID uuid.UUID, jobName string, recoverData any) {
-		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
+// saveOrUpdate 保存job or 更新
+func saveOrUpdate(jobName, crontab string, fun any) {
+	// 如果任务存在(jobName+fun)，则比对crontab，一样则不更新，否则更新crontab，并把其他字段清空
+	if global.DB.Where("name = ? and func = ?", jobName, getFunctionName(fun)).First(&model.CronJob{}).RowsAffected > 0 {
+		// 更新crontab
+		global.DB.Model(&model.CronJob{}).Where("name = ? and func = ?", jobName, getFunctionName(fun)).
+			UpdateColumns(map[string]interface{}{
+				"crontab":        crontab,
+				"last_run_start": nil,
+				"last_run_end":   nil,
+				"run_count":      0,
+				"success":        true,
+				"error":          nil,
+			})
+		return
+	}
+
+	// 记录任务到数据库
+	cronJob := &model.CronJob{
+		Name:    jobName,
+		Crontab: crontab,
+		Func:    getFunctionName(fun),
+	}
+	result := global.DB.Where("name = ?", jobName).Create(cronJob)
+	if result.Error != nil {
+		glog.Log.Errorf("任务记录创建失败: %v", result.Error)
+		panic(result.Error)
+	}
+}
+
+// beforeListener  任务运行前执行
+func beforeListener() gocron.EventListener {
+	return gocron.BeforeJobRuns(func(jobID uuid.UUID, jobName string) {
+		glog.Log.Infof("Job %s is start running...", jobName)
+
+		if !config.GloConfig.DB.Enable {
+			return
+		}
+		// 更新任务信息
+		global.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
+			UpdateColumns(map[string]interface{}{
+				"last_run_start": time.Now(),
+			})
 	})
 }
 
-func PrintJob() {
-	glog.Log.Info("主人你好,定时任务运行...")
-	panic("定时任务运行...")
+// afterListener  用于监听作业何时运行且没有错误，然后运行提供的函数。
+func afterListener() gocron.EventListener {
+	return gocron.AfterJobRuns(func(jobID uuid.UUID, jobName string) {
+		glog.Log.Infof("Job %s is running end", jobName)
+
+		if !config.GloConfig.DB.Enable {
+			return
+		}
+		// 更新任务信息
+		global.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
+			UpdateColumns(map[string]interface{}{
+				"last_run_end": time.Now(),
+				"run_count":    gorm.Expr("run_count + 1"),
+				"success":      true,
+			})
+	})
+}
+
+// panicListener  panic监听器
+func panicListener() gocron.EventListener {
+	return gocron.AfterJobRunsWithPanic(func(jobID uuid.UUID, jobName string, recoverData any) {
+		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
+		
+		if !config.GloConfig.DB.Enable {
+			return
+		}
+		// 更新任务信息
+		global.DB.Model(&model.CronJob{}).Where("id = ?", jobID).
+			UpdateColumns(map[string]interface{}{
+				"last_run_end": time.Now(),
+				"run_count":    gorm.Expr("run_count + 1"),
+				"success":      false,
+				"error":        fmt.Sprintf("%+v", recoverData),
+			})
+	})
+}
+
+// getFunctionName 获取函数名称
+func getFunctionName(fun any) string {
+	// 使用反射获取函数的值
+	value := reflect.ValueOf(fun)
+	if value.Kind() != reflect.Func {
+		return "unknown"
+	}
+	// 获取函数的指针
+	pc := value.Pointer()
+	if pc == 0 {
+		return "unknown"
+	}
+	f := runtime.FuncForPC(pc)
+	if f == nil {
+		return "unknown"
+	}
+	return f.Name()
 }

@@ -22,15 +22,18 @@ func InitCronJob() {
 	if config.GloConfig.DB.Enable {
 		model.AutoMigrateJobs()
 	}
-
-	// 添加一个每10秒执行一次的任务
-	//addJob(s, "PingUrl", "*/10 * * * * *", Ping)
-
+	addJobs(s)
 	// 启动调度器
 	start(s)
 }
 
-// 通用job构造函数
+// addJobs 添加任务
+func addJobs(s *gocron.Scheduler) {
+	// 添加一个每10秒执行一次的任务
+	//addJob(s, "PingUrl", "*/10 * * * * *", Ping)
+
+}
+
 func addJob(s *gocron.Scheduler, jobName string, crontab string, function any, parameters ...any) {
 	// 超时请自己在任务中处理，不在外面做。
 	scheduler := *s
@@ -147,7 +150,7 @@ func afterListener() gocron.EventListener {
 func panicListener() gocron.EventListener {
 	return gocron.AfterJobRunsWithPanic(func(jobID uuid.UUID, jobName string, recoverData any) {
 		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
-		
+
 		if !config.GloConfig.DB.Enable {
 			return
 		}

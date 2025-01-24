@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gin-starter/internal/global"
+	"gin-starter/internal/util/db"
 	"gin-starter/internal/util/glog"
 	"time"
 )
@@ -26,7 +26,7 @@ func (m *CronJob) TableName() string {
 
 // AutoMigrateJobs 自动迁移
 func AutoMigrateJobs() {
-	err := global.DB.AutoMigrate(&CronJob{})
+	err := db.DB.AutoMigrate(&CronJob{})
 	if err != nil {
 		panic("自动迁移失败: " + err.Error())
 	}

@@ -3,8 +3,8 @@ package jobs
 import (
 	"fmt"
 	"gin-starter/internal/config"
-	"gin-starter/internal/global"
 	"gin-starter/internal/model"
+	"gin-starter/internal/util/db"
 	"gin-starter/internal/util/glog"
 	"github.com/go-co-op/gocron/v2"
 	"github.com/google/uuid"
@@ -19,7 +19,7 @@ func InitCronJob() {
 	s := initScheduler()
 
 	// 初始化表
-	if config.GloConfig.DB.Enable {
+	if config.Conf.DB.Enable {
 		model.AutoMigrateJobs()
 	}
 	addJobs(s)
@@ -38,7 +38,7 @@ func addJob(s *gocron.Scheduler, jobName string, crontab string, function any, p
 	// 超时请自己在任务中处理，不在外面做。
 	scheduler := *s
 
-	if config.GloConfig.DB.Enable {
+	if config.Conf.DB.Enable {
 		saveOrUpdate(jobName, crontab, function)
 	}
 
@@ -85,9 +85,9 @@ func start(s *gocron.Scheduler) {
 // saveOrUpdate 保存job or 更新
 func saveOrUpdate(jobName, crontab string, fun any) {
 	// 如果任务存在(jobName+fun)，则比对crontab，一样则不更新，否则更新crontab，并把其他字段清空
-	if global.DB.Where("name = ? and func = ?", jobName, getFunctionName(fun)).First(&model.CronJob{}).RowsAffected > 0 {
+	if db.DB.Where("name = ? and func = ?", jobName, getFunctionName(fun)).First(&model.CronJob{}).RowsAffected > 0 {
 		// 更新crontab
-		global.DB.Model(&model.CronJob{}).Where("name = ? and func = ?", jobName, getFunctionName(fun)).
+		db.DB.Model(&model.CronJob{}).Where("name = ? and func = ?", jobName, getFunctionName(fun)).
 			UpdateColumns(map[string]interface{}{
 				"crontab":        crontab,
 				"last_run_start": nil,
@@ -105,7 +105,7 @@ func saveOrUpdate(jobName, crontab string, fun any) {
 		Crontab: crontab,
 		Func:    getFunctionName(fun),
 	}
-	result := global.DB.Where("name = ?", jobName).Create(cronJob)
+	result := db.DB.Where("name = ?", jobName).Create(cronJob)
 	if result.Error != nil {
 		glog.Log.Errorf("任务记录创建失败: %v", result.Error)
 		panic(result.Error)
@@ -117,11 +117,11 @@ func beforeListener() gocron.EventListener {
 	return gocron.BeforeJobRuns(func(jobID uuid.UUID, jobName string) {
 		glog.Log.Infof("Job %s is start running...", jobName)
 
-		if !config.GloConfig.DB.Enable {
+		if !config.Conf.DB.Enable {
 			return
 		}
 		// 更新任务信息
-		global.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
+		db.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
 			UpdateColumns(map[string]interface{}{
 				"last_run_start": time.Now(),
 			})
@@ -133,11 +133,11 @@ func afterListener() gocron.EventListener {
 	return gocron.AfterJobRuns(func(jobID uuid.UUID, jobName string) {
 		glog.Log.Infof("Job %s is running end", jobName)
 
-		if !config.GloConfig.DB.Enable {
+		if !config.Conf.DB.Enable {
 			return
 		}
 		// 更新任务信息
-		global.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
+		db.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
 			UpdateColumns(map[string]interface{}{
 				"last_run_end": time.Now(),
 				"run_count":    gorm.Expr("run_count + 1"),
@@ -151,11 +151,11 @@ func panicListener() gocron.EventListener {
 	return gocron.AfterJobRunsWithPanic(func(jobID uuid.UUID, jobName string, recoverData any) {
 		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
 
-		if !config.GloConfig.DB.Enable {
+		if !config.Conf.DB.Enable {
 			return
 		}
 		// 更新任务信息
-		global.DB.Model(&model.CronJob{}).Where("id = ?", jobID).
+		db.DB.Model(&model.CronJob{}).Where("id = ?", jobID).
 			UpdateColumns(map[string]interface{}{
 				"last_run_end": time.Now(),
 				"run_count":    gorm.Expr("run_count + 1"),

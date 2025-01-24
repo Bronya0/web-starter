@@ -1,9 +1,8 @@
-package gorm
+package db
 
 import (
 	"fmt"
 	"gin-starter/internal/config"
-	"gin-starter/internal/global"
 	"gin-starter/internal/util/glog"
 	"gorm.io/gorm"
 	gormLog "gorm.io/gorm/logger"
@@ -12,36 +11,40 @@ import (
 )
 
 type IGormDB interface {
-	NewDB() *gorm.DB
+	NewDB(dsn string) *gorm.DB
 }
 
+var (
+	DB *gorm.DB
+)
+
 func InitDB() {
-	if config.GloConfig.DB.Enable {
-		global.DB = InitGorm(config.GloConfig)
+	if config.Conf.DB.Enable {
+		DB = initGorm()
 	} else {
 		glog.Log.Warn("数据库未启用...")
 	}
 }
 
-func InitGorm(gloConfig *config.Config) *gorm.DB {
-	dbConf := &gloConfig.DB
+func initGorm() *gorm.DB {
+	dbConf := config.Conf.DB
 	gormConfig := &gorm.Config{
 		SkipDefaultTransaction: true, // 跳过默认事务，提高性能
 		PrepareStmt:            true, // 缓存预编译语句
-		Logger:                 NewGormLogger(gloConfig),
+		Logger:                 newGormLogger(),
 	}
 
 	var db IGormDB
-	switch gloConfig.DB.Type {
+	switch config.Conf.DB.Type {
 	case "mysql":
-		db = &Mysql{dbConf, gormConfig}
+		db = &Mysql{gormConfig}
 	case "pgsql":
-		db = &PgSql{dbConf, gormConfig}
+		db = &PgSql{gormConfig}
 	default:
-		db = &PgSql{dbConf, gormConfig}
+		db = &PgSql{gormConfig}
 	}
 
-	instance := db.NewDB()
+	instance := db.NewDB(dbConf.DSN)
 	sqlDB, _ := instance.DB()
 
 	// SetConnMaxLifetime 设置了连接可复用的最大时间
@@ -59,15 +62,15 @@ func InitGorm(gloConfig *config.Config) *gorm.DB {
 	return instance
 }
 
-func NewGormLogger(gloConfig *config.Config) gormLog.Interface {
+func newGormLogger() gormLog.Interface {
 	newLogger := gormLog.New(
 		&CustomWriter{},
 		gormLog.Config{
-			SlowThreshold:             time.Duration(gloConfig.DB.SlowThreshold) * time.Second, // Slow SQL threshold
-			LogLevel:                  gormLog.Warn,                                            // Log level
-			IgnoreRecordNotFoundError: true,                                                    // 记录日志时会忽略ErrRecordNotFound错误
-			ParameterizedQueries:      true,                                                    // 不会在SQL日志中记录参数值，这有助于保护敏感信息不被记录在日志中。
-			Colorful:                  true,                                                    // 如果设置为true，日志将以彩色显示，这有助于在终端中快速区分不同级别的日志。
+			SlowThreshold:             time.Duration(config.Conf.DB.SlowThreshold) * time.Second, // Slow SQL threshold
+			LogLevel:                  gormLog.Warn,                                              // Log level
+			IgnoreRecordNotFoundError: true,                                                      // 记录日志时会忽略ErrRecordNotFound错误
+			ParameterizedQueries:      true,                                                      // 不会在SQL日志中记录参数值，这有助于保护敏感信息不被记录在日志中。
+			Colorful:                  true,                                                      // 如果设置为true，日志将以彩色显示，这有助于在终端中快速区分不同级别的日志。
 		},
 	)
 

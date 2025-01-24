@@ -15,9 +15,9 @@ import (
 // InitServer 加载配置文件的端口，启动gin服务，同时初始化路由
 func InitServer() {
 
-	engine := CreateEngine()
+	engine := createEngine()
 
-	cfg := config.GloConfig.Server
+	cfg := config.Conf.Server
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	srv := &http.Server{
 		Addr:         addr,
@@ -41,8 +41,8 @@ func printRegisteredRoutes(r *gin.Engine) {
 }
 
 // CreateEngine 注册通用的路由
-func CreateEngine() *gin.Engine {
-	r := Engine()
+func createEngine() *gin.Engine {
+	r := newEngine()
 	// 放中间件前的路由,无需认证
 	addPublicRouter(r)
 	// 中间件
@@ -52,11 +52,11 @@ func CreateEngine() *gin.Engine {
 	return r
 }
 
-func Engine() *gin.Engine {
+func newEngine() *gin.Engine {
 	var engine *gin.Engine
 
 	// 根据配置文件的debug初始化gin路由
-	if config.GloConfig.Server.Debug == false {
+	if config.Conf.Server.Debug == false {
 		glog.Log.Info("【生产模式】")
 		// 禁用 gin 记录接口访问日志，
 		gin.SetMode(gin.ReleaseMode)
@@ -74,7 +74,7 @@ func Engine() *gin.Engine {
 }
 
 func addMiddleware(r *gin.Engine) {
-	if config.GloConfig.Server.Debug == false {
+	if config.Conf.Server.Debug == false {
 		glog.Log.Info("【生产模式】开启jwt认证")
 		r.Use(middleware.JWTAuthMiddleware())
 	} else {

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"gin-starter/internal/global"
 	"gin-starter/internal/model/resp"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -52,16 +51,6 @@ func TestGorm(c *gin.Context) {
 		resp.Error(c, err.Error(), nil)
 		return
 	}
-	page := pager.Page
-	size := pager.Size
-	offset := (page - 1) * size
-
-	global.DB.Table("father").Select("father.name, father.age, son.age as son_age, son.name as son_name").
-		Joins("INNER JOIN son ON father.id = son.father_id").
-		Where("son.age > ?", 10).
-		Limit(size).
-		Offset(offset).
-		Scan(&fathersWithSons)
 
 	c.JSON(200, fathersWithSons)
 }

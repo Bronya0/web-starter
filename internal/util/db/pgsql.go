@@ -1,24 +1,22 @@
-package gorm
+package db
 
 import (
-	"gin-starter/internal/config"
 	"gin-starter/internal/util/glog"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type PgSql struct {
-	*config.DB
-	GormConfig *gorm.Config
+	gormConfig *gorm.Config
 }
 
-func (p *PgSql) NewDB() *gorm.DB {
+func (p *PgSql) NewDB(dsn string) *gorm.DB {
 
 	pgsqlConfig := postgres.Config{
-		DSN:                  p.DSN, // DSN data source name
+		DSN:                  dsn, // DSN data source name
 		PreferSimpleProtocol: false,
 	}
-	db, err := gorm.Open(postgres.New(pgsqlConfig), p.GormConfig)
+	db, err := gorm.Open(postgres.New(pgsqlConfig), p.gormConfig)
 
 	if err != nil {
 		glog.Log.Error(err)

@@ -1,4 +1,4 @@
-package global
+package common
 
 const (
 	ErrorsParseTokenFail    string = "解析token失败"

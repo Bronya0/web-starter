@@ -1,24 +1,22 @@
-package gorm
+package db
 
 import (
-	"gin-starter/internal/config"
 	"gin-starter/internal/util/glog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type Mysql struct {
-	*config.DB
-	GormConfig *gorm.Config
+	gormConfig *gorm.Config
 }
 
-func (m *Mysql) NewDB() *gorm.DB {
+func (m *Mysql) NewDB(dsn string) *gorm.DB {
 
 	mysqlConfig := mysql.Config{
-		DSN:                       m.DSN, // DSN data source name
+		DSN:                       dsn,   // DSN data source name
 		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
-	db, err := gorm.Open(mysql.New(mysqlConfig), m.GormConfig)
+	db, err := gorm.Open(mysql.New(mysqlConfig), m.gormConfig)
 	if err != nil {
 		glog.Log.Error(err)
 		panic(err)

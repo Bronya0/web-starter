@@ -13,7 +13,7 @@ type Options struct {
 
 func Send(o *Options) error {
 	m := gomail.NewMessage()
-	mailConfig := config.GloConfig.Mail
+	mailConfig := config.Conf.Mail
 	//设置发件人
 	m.SetHeader("From", mailConfig.Username)
 	//设置多个收件人

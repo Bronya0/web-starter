@@ -6,11 +6,15 @@ import (
 )
 
 var (
-	Log = InitLogger(config.GloConfig.Logs.Path)
+	Log *logging.Logging
 )
 
+func InitLogger() {
+	Log = initLogger(config.Conf.Logs.Path)
+}
+
 // InitLogger pathFile: 日志全路径
-func InitLogger(path string) *logging.Logging {
+func initLogger(path string) *logging.Logging {
 
 	logger := logging.NewLogger()
 	logger.SetOption(&logging.Option{

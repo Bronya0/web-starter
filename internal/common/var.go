@@ -1,17 +1,19 @@
-package global
+package common
 
 import (
 	"crypto/tls"
 	"github.com/go-resty/resty/v2"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
 	"time"
 )
 
+/*
+不可依赖项目包
+*/
+
 var (
-	DB         *gorm.DB
 	RootPath   = getWorkDir()
 	HttpClient = initHttpClient()
 	Cache      = make(map[string]any)

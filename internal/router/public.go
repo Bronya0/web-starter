@@ -19,14 +19,14 @@ func addPublicRouter(r *gin.Engine) *gin.Engine {
 	// r.LoadHTMLGlob("front/*.tmpl")
 	// r.Static("front", "front")
 
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"love you": time.Now().Format(time.DateTime),
+		})
+	})
+
 	publicApi := r.Group("/api/public")
 	{
-		publicApi.GET("/", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"love you": time.Now().Format(time.DateTime),
-			})
-		})
-
 		publicApi.GET("/father", api.TestGorm)
 
 		// 登录获取JWT

@@ -40,7 +40,7 @@ func GetRedisClient() *RedisClient {
 
 // newRedisClient 创建新的Redis客户端
 func newRedisClient() *RedisClient {
-	conf := config.GloConfig.Redis
+	conf := config.Conf.Redis
 
 	client := redis.NewClient(&redis.Options{
 		Addr:         fmt.Sprintf("%s:%d", conf.Host, conf.Port),

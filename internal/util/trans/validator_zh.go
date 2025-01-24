@@ -1,4 +1,4 @@
-package validator_zh
+package trans
 
 import (
 	"fmt"
@@ -10,21 +10,20 @@ import (
 	"github.com/go-playground/validator/v10"
 	enTranslations "github.com/go-playground/validator/v10/translations/en"
 	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
-	"strings"
 )
 
 // Trans 定义一个全局翻译器T
 var Trans ut.Translator
 
-func InitValidator(locale string) {
-	if err := InitTrans(locale); err != nil {
+func InitTrans(locale string) {
+	if err := initTrans(locale); err != nil {
 		panic(err)
 	}
 	glog.Log.Info("验证器初始化并本土化成功...")
 }
 
-// InitTrans 初始化表单参数验证器的翻译器
-func InitTrans(locale string) (err error) {
+// initTrans 初始化表单参数验证器的翻译器
+func initTrans(locale string) (err error) {
 	// 修改gin框架中的Validator引擎属性，实现自定制
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 
@@ -54,13 +53,4 @@ func InitTrans(locale string) (err error) {
 		return
 	}
 	return
-}
-
-// RemoveTopStruct 将返回的结构体名去除掉，只留下需要的字段名
-func RemoveTopStruct(fields map[string]string) map[string]string {
-	res := map[string]string{}
-	for field, err := range fields {
-		res[field[strings.LastIndex(field, ".")+1:]] = err
-	}
-	return res
 }

@@ -17,13 +17,10 @@ type CustomClaims struct {
 	jwt.RegisteredClaims        // 内嵌标准的声明
 }
 
-// CustomSecret 用于加盐的字符串
-var CustomSecret = []byte(config.GloConfig.Jwt.JwtTokenSignKey)
-
 // GenToken 生成JWT
 func GenToken(userID string) (string, error) {
 	// TokenExpireDuration jwt token 的过期时间
-	tokenExpire, err := time.ParseDuration(config.GloConfig.Jwt.ExpiresTime)
+	tokenExpire, err := time.ParseDuration(config.Conf.Jwt.ExpiresTime)
 	if err != nil {
 		return "", err
 	}
@@ -38,7 +35,7 @@ func GenToken(userID string) (string, error) {
 	// 使用指定的签名方法创建签名对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// 使用指定的secret签名并获得完整的编码后的字符串token
-	return token.SignedString(CustomSecret)
+	return token.SignedString([]byte(config.Conf.Jwt.JwtTokenSignKey))
 }
 
 // ParseToken 解析JWT
@@ -46,7 +43,7 @@ func ParseToken(tokenString string) (*CustomClaims, error) {
 	// 解析token
 	// 如果是自定义Claim结构体则需要使用 ParseWithClaims 方法
 	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (i interface{}, err error) {
-		return CustomSecret, nil
+		return []byte(config.Conf.Jwt.JwtTokenSignKey), nil
 	})
 	if err != nil {
 		return nil, err

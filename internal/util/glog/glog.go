@@ -3,6 +3,7 @@ package glog
 import (
 	"gin-starter/internal/config"
 	logging "github.com/donnie4w/go-logger/logger"
+	"log"
 )
 
 var (
@@ -10,11 +11,12 @@ var (
 )
 
 func InitLogger() {
-	Log = initLogger(config.Conf.Logs.Path)
+	Log = initLogger(config.Conf.Log.Path)
 }
 
 // InitLogger pathFile: 日志全路径
 func initLogger(path string) *logging.Logging {
+	log.Println("初始化日志……" + path)
 
 	logger := logging.NewLogger()
 	logger.SetOption(&logging.Option{

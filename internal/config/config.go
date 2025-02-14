@@ -25,6 +25,7 @@ func InitConfig() {
 
 // initConfig 将配置文件映射城结构体
 func initConfig(c any, configPath, confType string) {
+	log.Println("初始化配置文件...", configPath)
 	// 判断文件是否存在
 	if !fileutil.IsExist(configPath) {
 		panic(fmt.Errorf("配置文件不存在: %s \n", configPath))
@@ -55,7 +56,7 @@ type Config struct {
 	Server    Server    `yaml:"Server"`
 	DB        DB        `yaml:"Db"`
 	Redis     Redis     `yaml:"Redis"`
-	Logs      Logs      `yaml:"Log"`
+	Log       Logs      `yaml:"Log"`
 	Jwt       Jwt       `yaml:"Jwt"`
 	Websocket Websocket `yaml:"Websocket"`
 	Mail      Mail      `yaml:"Mail"`

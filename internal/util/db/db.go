@@ -89,7 +89,6 @@ func (l CustomWriter) Printf(strFormat string, args ...interface{}) {
 	} else if strings.HasPrefix(strFormat, "[warn]") || strings.HasPrefix(strFormat, "[traceWarn]") {
 		glog.Log.Warn(logFlag, logRes)
 	} else {
-		fmt.Println(111, strFormat, args)
 		glog.Log.Info(logFlag, logRes)
 	}
 

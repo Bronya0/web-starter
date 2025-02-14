@@ -52,19 +52,19 @@ func initConfig(c any, configPath, confType string) {
 }
 
 type Config struct {
-	Server    Server    `yaml:"server"`
-	DB        DB        `yaml:"DB"`
+	Server    Server    `yaml:"Server"`
+	DB        DB        `yaml:"Db"`
 	Redis     Redis     `yaml:"Redis"`
-	Logs      Logs      `yaml:"Logs"`
+	Logs      Logs      `yaml:"Log"`
 	Jwt       Jwt       `yaml:"Jwt"`
 	Websocket Websocket `yaml:"Websocket"`
-	Mail      Mail      `yaml:"mail"`
+	Mail      Mail      `yaml:"Mail"`
 }
 
 type Server struct {
-	Debug        bool   `yaml:"debug"`
-	Host         string `yaml:"host"`
-	Port         int    `yaml:"port"`
+	Debug        bool   `yaml:"Debug"`
+	Host         string `yaml:"Host"`
+	Port         int    `yaml:"Port"`
 	ReadTimeout  int    `yaml:"ReadTimeout"`
 	WriteTimeout int    `yaml:"WriteTimeout"`
 	IdleTimeout  int    `yaml:"IdleTimeout"`
@@ -74,7 +74,6 @@ type DB struct {
 	Enable        bool   `yaml:"Enable"`
 	Type          string `yaml:"Type"`
 	DSN           string `yaml:"DSN"`
-	DbLog         string `yaml:"DbLog"`
 	MaxLifetime   int    `yaml:"MaxLifetime"`
 	MaxIdletime   int    `yaml:"MaxIdletime"`
 	MaxOpenConns  int    `yaml:"MaxOpenConns"`
@@ -88,15 +87,15 @@ type Logs struct {
 }
 
 type Redis struct {
-	Host         string `yaml:"host"`
-	Port         int    `yaml:"port"`
-	Password     string `yaml:"password"`
-	DB           int    `yaml:"db"`
-	MaxIdle      int    `yaml:"maxIdle"`
-	MaxActive    int    `yaml:"maxActive"`
-	IdleTimeout  int    `yaml:"idleTimeout"`
-	PoolSize     int    `yaml:"poolSize"`
-	MinIdleConns int    `yaml:"minIdleConns"`
+	Host         string `yaml:"Host"`
+	Port         int    `yaml:"Port"`
+	Password     string `yaml:"Password"`
+	DB           int    `yaml:"Db"`
+	MaxIdle      int    `yaml:"MaxIdle"`
+	MaxActive    int    `yaml:"MaxActive"`
+	IdleTimeout  int    `yaml:"IdleTimeout"`
+	PoolSize     int    `yaml:"PoolSize"`
+	MinIdleConns int    `yaml:"MinIdleConns"`
 }
 
 type Jwt struct {
@@ -113,9 +112,10 @@ type Websocket struct {
 	PingPeriod            int `yaml:"PingPeriod"`
 	HeartbeatFailMaxTimes int `yaml:"HeartbeatFailMaxTimes"`
 }
+
 type Mail struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Host     string `yaml:"Host"`
+	Port     int    `yaml:"Port"`
+	Username string `yaml:"Username"`
+	Password string `yaml:"Password"`
 }

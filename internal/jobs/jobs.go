@@ -15,15 +15,12 @@ import (
 )
 
 func InitCronJob() {
-	// 创建一个新的调度器
 	s := initScheduler()
-
 	// 初始化表
 	if config.Conf.DB.Enable {
 		model.AutoMigrateJobs()
 	}
 	addJobs(s)
-	// 启动调度器
 	start(s)
 }
 
@@ -84,7 +81,7 @@ func start(s *gocron.Scheduler) {
 
 // saveOrUpdate 保存job or 更新
 func saveOrUpdate(jobName, crontab string, fun any) {
-	// 如果任务存在(jobName+fun)，则比对crontab，一样则不更新，否则更新crontab，并把其他字段清空
+	// 如果任务存在(jobName+fun)，则更新crontab，并把其他字段清空；否则新建
 	if db.DB.Where("name = ? and func = ?", jobName, getFunctionName(fun)).First(&model.CronJob{}).RowsAffected > 0 {
 		// 更新crontab
 		db.DB.Model(&model.CronJob{}).Where("name = ? and func = ?", jobName, getFunctionName(fun)).

@@ -85,6 +85,7 @@ func (c *FranzContext) Produce(topic string, key, value string, partition, num i
 		return errors.New("请先初始化连接")
 	}
 	ctx := context.Background()
+	c.kac.ListTopics()
 	headers2 := make([]kgo.RecordHeader, len(headers))
 	for i := 0; i < len(headers); i++ {
 		headers2[i] = kgo.RecordHeader{

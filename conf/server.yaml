@@ -1,16 +1,17 @@
-server:
-  debug: true
-  host: 127.0.0.1
-  port: 8001
+Server:
+  Debug: true
+  Host: 127.0.0.1
+  Port: 8001
   ReadTimeout: 300     # 读取请求的超时时间
   WriteTimeout: 300    # 写入响应的超时时间
   IdleTimeout: 300    #  keep-alive 超时时间
 
-Logs:
+Log:
   Level: DEBUG
   Path: "./log/all.log"
+  Db: "./log/gorm.log"
 
-DB:
+Db:
   Enable: false
   Type: pgsql
   DSN: "host=127.0.0.1 port=5432 user=postgres dbname=postgres sslmode=disable TimeZone=Asia/Shanghai"
@@ -35,19 +36,19 @@ Websocket: #该服务与Http具有相同的ip、端口，因此不需要额外�
   ReadDeadline: 100                   # 客户端在线情况下，正常的业务消息间隔秒数必须小于该值，否则服务器将会主动断开，该值不能小于心跳频率*允许失败次数,单位：秒。 0 表示不设限制，即服务器不主动断开不发送任何消息的在线客户端，但会消耗服务器资源
   WriteDeadline: 35                   # 消息单次写入超时时间，单位：秒
 
-redis:
-  host: localhost
-  port: 6379
-  password: ""
-  db: 0
-  maxIdle: 10
-  maxActive: 100
-  idleTimeout: 300
-  poolSize: 100
-  minIdleConns: 5
+Redis:
+  Host: localhost
+  Port: 6379
+  Password: ""
+  Db: 0
+  MaxIdle: 10
+  MaxActive: 100
+  IdleTimeout: 300
+  PoolSize: 100
+  MinIdleConns: 5
 
-mail:
-  host: smtp.qq.com
-  port: 465
-  username:
-  password:
+Mail:
+  Host: smtp.qq.com
+  Port: 465
+  Username:
+  Password:

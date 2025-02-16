@@ -4,7 +4,7 @@ import (
 	"gin-starter/internal/model/req"
 	"gin-starter/internal/model/resp"
 	"gin-starter/internal/service"
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/glog"
 	"github.com/gin-gonic/gin"
 )
 

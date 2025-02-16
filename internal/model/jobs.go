@@ -1,8 +1,8 @@
 package model
 
 import (
-	"gin-starter/internal/util/db"
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/db"
+	"gin-starter/internal/utils/glog"
 	"time"
 )
 

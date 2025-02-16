@@ -4,9 +4,9 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/jobs"
 	"gin-starter/internal/router"
-	"gin-starter/internal/util/db"
-	"gin-starter/internal/util/glog"
-	"gin-starter/internal/util/trans"
+	"gin-starter/internal/utils/db"
+	"gin-starter/internal/utils/glog"
+	"gin-starter/internal/utils/trans"
 )
 
 //go:generate go env -w GO111MODULE=on

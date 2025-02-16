@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 	"gin-starter/internal/model/resp"
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/glog"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )

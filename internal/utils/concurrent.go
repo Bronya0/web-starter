@@ -1,4 +1,4 @@
-package util
+package utils
 
 import (
 	"fmt"
@@ -84,7 +84,7 @@ func SafeGoWithError(fn func() error, errHandler func(error)) {
 	}()
 }
 
-// Recover use：defer util.Recover()()
+// Recover use：defer utils.Recover()()
 func Recover() func() {
 	return func() {
 		if err := recover(); err != nil {

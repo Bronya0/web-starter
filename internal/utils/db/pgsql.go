@@ -1,7 +1,7 @@
 package db
 
 import (
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/glog"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

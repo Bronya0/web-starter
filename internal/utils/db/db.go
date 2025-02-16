@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 	"gin-starter/internal/config"
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/glog"
 	"gorm.io/gorm"
 	gormLog "gorm.io/gorm/logger"
 	"strings"

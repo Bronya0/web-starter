@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/glog"
 	"github.com/gin-gonic/gin"
 	"time"
 )

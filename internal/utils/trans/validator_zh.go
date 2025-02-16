@@ -2,7 +2,7 @@ package trans
 
 import (
 	"fmt"
-	"gin-starter/internal/util/glog"
+	"gin-starter/internal/utils/glog"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"

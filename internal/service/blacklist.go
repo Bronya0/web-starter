@@ -5,8 +5,8 @@ import (
 	"errors"
 	"gin-starter/internal/common"
 	"gin-starter/internal/model/sys"
-	"gin-starter/internal/util/db"
-	"gin-starter/internal/util/gredis"
+	"gin-starter/internal/utils/db"
+	"gin-starter/internal/utils/gredis"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"gorm.io/gorm"
 )

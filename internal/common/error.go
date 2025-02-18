@@ -8,7 +8,6 @@ const (
 )
 
 const (
-	//  登录认证相关
 	ErrorsLoginFail           string = "登录失败"
 	ErrorsLoginExpired        string = "登录已过期"
 	ErrorsLoginInvalid        string = "无效的登录"

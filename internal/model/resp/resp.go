@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func Success(c *gin.Context, msg string, data interface{}) {
+func Success(c *gin.Context, msg string, data any) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 2000,
 		"msg":  msg,
@@ -13,7 +13,7 @@ func Success(c *gin.Context, msg string, data interface{}) {
 	})
 	c.Abort()
 }
-func Error(c *gin.Context, msg string, data interface{}) {
+func Error(c *gin.Context, msg string, data any) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 5000,
 		"msg":  msg,

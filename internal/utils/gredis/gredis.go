@@ -70,12 +70,12 @@ func (r *RedisClient) Get(key string) (string, error) {
 }
 
 // Set 设置键值
-func (r *RedisClient) Set(key string, value interface{}, expiration time.Duration) error {
+func (r *RedisClient) Set(key string, value any, expiration time.Duration) error {
 	return r.Client.Set(r.ctx, key, value, expiration).Err()
 }
 
 // GetOrSet 获取键值，如果键不存在则设置默认值并返回
-func (r *RedisClient) GetOrSet(key string, defaultValue interface{}, expiration time.Duration) (string, error) {
+func (r *RedisClient) GetOrSet(key string, defaultValue any, expiration time.Duration) (string, error) {
 	value, err := r.Get(key)
 	if errors.Is(err, redis.Nil) {
 		// 键不存在，设置默认值
@@ -103,12 +103,12 @@ func (r *RedisClient) Exists(keys ...string) (bool, error) {
 }
 
 // SetNX 仅当键不存在时设置
-func (r *RedisClient) SetNX(key string, value interface{}, expiration time.Duration) (bool, error) {
+func (r *RedisClient) SetNX(key string, value any, expiration time.Duration) (bool, error) {
 	return r.Client.SetNX(r.ctx, key, value, expiration).Result()
 }
 
 // HSet Hash设置
-func (r *RedisClient) HSet(key string, values ...interface{}) error {
+func (r *RedisClient) HSet(key string, values ...any) error {
 	return r.Client.HSet(r.ctx, key, values...).Err()
 }
 

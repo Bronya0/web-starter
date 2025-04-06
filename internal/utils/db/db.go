@@ -79,7 +79,7 @@ func newGormLogger() gormLog.Interface {
 
 type CustomWriter struct{}
 
-func (l CustomWriter) Printf(strFormat string, args ...interface{}) {
+func (l CustomWriter) Printf(strFormat string, args ...any) {
 	logRes := fmt.Sprintf(strFormat, args...)
 	logFlag := "gorm日志:"
 	if strings.HasPrefix(strFormat, "[info]") || strings.HasPrefix(strFormat, "[traceStr]") {

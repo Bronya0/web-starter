@@ -85,7 +85,7 @@ func saveOrUpdate(jobName, crontab string, fun any) {
 	if db.DB.Where("name = ? and func = ?", jobName, getFunctionName(fun)).First(&model.CronJob{}).RowsAffected > 0 {
 		// 更新crontab
 		db.DB.Model(&model.CronJob{}).Where("name = ? and func = ?", jobName, getFunctionName(fun)).
-			UpdateColumns(map[string]interface{}{
+			Updates(map[string]any{
 				"crontab":        crontab,
 				"last_run_start": nil,
 				"last_run_end":   nil,
@@ -119,7 +119,7 @@ func beforeListener() gocron.EventListener {
 		}
 		// 更新任务信息
 		db.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
-			UpdateColumns(map[string]interface{}{
+			Updates(map[string]any{
 				"last_run_start": time.Now(),
 			})
 	})
@@ -135,7 +135,7 @@ func afterListener() gocron.EventListener {
 		}
 		// 更新任务信息
 		db.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
-			UpdateColumns(map[string]interface{}{
+			UpdateColumns(map[string]any{
 				"last_run_end": time.Now(),
 				"run_count":    gorm.Expr("run_count + 1"),
 				"success":      true,
@@ -152,8 +152,8 @@ func panicListener() gocron.EventListener {
 			return
 		}
 		// 更新任务信息
-		db.DB.Model(&model.CronJob{}).Where("id = ?", jobID).
-			UpdateColumns(map[string]interface{}{
+		db.DB.Model(&model.CronJob{}).Where("name = ?", jobName).
+			UpdateColumns(map[string]any{
 				"last_run_end": time.Now(),
 				"run_count":    gorm.Expr("run_count + 1"),
 				"success":      false,

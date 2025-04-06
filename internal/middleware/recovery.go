@@ -12,7 +12,7 @@ import (
 // 只能recover主线程的panic错误
 func CustomRecovery() gin.HandlerFunc {
 	DefaultErrorWriter := &PanicExceptionRecord{}
-	return gin.RecoveryWithWriter(DefaultErrorWriter, func(c *gin.Context, err interface{}) {
+	return gin.RecoveryWithWriter(DefaultErrorWriter, func(c *gin.Context, err any) {
 		// 这里针对发生的panic等异常进行统一响应即可
 		// 这里的 err 数据类型为 ：runtime.boundsError  ，需要转为普通数据类型才可以输出
 		resp.Error(c, "", fmt.Sprintf("%s", err))

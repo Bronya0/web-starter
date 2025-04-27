@@ -1,36 +1,33 @@
 package api
 
 import (
-	"gin-starter/internal/model/resp"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"net/http"
-	"time"
+	"web-starter/internal/model/resp"
 )
 
-func Hello(c *gin.Context) {
-	time.Sleep(time.Second * 2)
-	c.JSON(http.StatusOK, gin.H{
-		"now": time.Now().Format(time.DateTime),
-	})
-}
-
-func HelloPost(c *gin.Context) {
-	type RegisterRequest struct {
-		Username string `json:"username" binding:"required"`
-		Email    string `json:"email" binding:"required,email"`
-		Age      uint8  `json:"age" binding:"gte=1,lte=120"`
-	}
-	var r RegisterRequest
-	err := c.ShouldBindJSON(&r)
-	if err != nil {
-		resp.Error(c, err.Error(), nil)
-		return
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"title": "提交正确",
-		})
-	}
-}
+//
+//func Hello(c echo.Context) error {
+//	time.Sleep(time.Second * 2)
+//	return c.JSON(http.StatusOK, map[string]string{
+//		"now": time.Now().Format(time.DateTime),
+//	})
+//}
+//
+//func HelloPost(c echo.Context) error {
+//	type RegisterRequest struct {
+//		Username string `json:"username" binding:"required"`
+//		Email    string `json:"email" binding:"required,email"`
+//		Age      uint8  `json:"age" binding:"gte=1,lte=120"`
+//	}
+//	var r RegisterRequest
+//	if err := c.Bind(&r); err != nil {
+//		return resp.Error(c, err.Error(), nil)
+//	}
+//	return c.JSON(http.StatusOK, map[string]string{
+//		"title": "提交正确",
+//	})
+//}
 
 type Page struct {
 	Page int `form:"page" binding:"required,gte=1"`
@@ -44,13 +41,11 @@ type FatherReq struct {
 	SonAge     int    `json:"son_age"`
 }
 
-func TestGorm(c *gin.Context) {
+func TestGorm(c echo.Context) error {
 	var fathersWithSons []FatherReq
 	var pager Page
-	if err := c.ShouldBind(&pager); err != nil {
-		resp.Error(c, err.Error(), nil)
-		return
+	if err := c.Bind(&pager); err != nil {
+		return resp.Error(c, err.Error(), nil)
 	}
-
-	c.JSON(200, fathersWithSons)
+	return c.JSON(http.StatusOK, fathersWithSons)
 }

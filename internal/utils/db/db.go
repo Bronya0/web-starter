@@ -2,12 +2,12 @@ package db
 
 import (
 	"fmt"
-	"gin-starter/internal/config"
-	"gin-starter/internal/utils/glog"
 	"gorm.io/gorm"
 	gormLog "gorm.io/gorm/logger"
 	"strings"
 	"time"
+	"web-starter/internal/config"
+	"web-starter/internal/utils/glog"
 )
 
 type IGormDB interface {

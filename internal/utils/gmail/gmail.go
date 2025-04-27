@@ -1,8 +1,8 @@
 package gmail
 
 import (
-	"gin-starter/internal/config"
 	"gopkg.in/gomail.v2"
+	"web-starter/internal/config"
 )
 
 type Options struct {

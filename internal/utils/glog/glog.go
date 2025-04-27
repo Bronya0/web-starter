@@ -1,9 +1,9 @@
 package glog
 
 import (
-	"gin-starter/internal/config"
 	"github.com/donnie4w/go-logger/logger"
 	"log"
+	"web-starter/internal/config"
 )
 
 var (

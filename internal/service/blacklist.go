@@ -3,12 +3,12 @@ package service
 import (
 	"context"
 	"errors"
-	"gin-starter/internal/common"
-	"gin-starter/internal/model/sys"
-	"gin-starter/internal/utils/db"
-	"gin-starter/internal/utils/gredis"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"gorm.io/gorm"
+	"web-starter/internal/common"
+	"web-starter/internal/model/sys"
+	"web-starter/internal/utils/db"
+	"web-starter/internal/utils/gredis"
 )
 
 // checkBlacklist 检查用户是否在黑名单中

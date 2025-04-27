@@ -1,5 +1,5 @@
 Server:
-  Debug: true
+  Debug: false
   Host: 127.0.0.1
   Port: 8001
   ReadTimeout: 300     # 读取请求的超时时间

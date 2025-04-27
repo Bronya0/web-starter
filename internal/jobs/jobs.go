@@ -2,16 +2,16 @@ package jobs
 
 import (
 	"fmt"
-	"gin-starter/internal/config"
-	"gin-starter/internal/model"
-	"gin-starter/internal/utils/db"
-	"gin-starter/internal/utils/glog"
 	"github.com/go-co-op/gocron/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"reflect"
 	"runtime"
 	"time"
+	"web-starter/internal/config"
+	"web-starter/internal/model"
+	"web-starter/internal/utils/db"
+	"web-starter/internal/utils/glog"
 )
 
 func InitCronJob() {

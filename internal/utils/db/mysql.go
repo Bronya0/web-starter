@@ -1,9 +1,9 @@
 package db
 
 import (
-	"gin-starter/internal/utils/glog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"web-starter/internal/utils/glog"
 )
 
 type Mysql struct {

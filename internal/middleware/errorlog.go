@@ -2,24 +2,25 @@ package middleware
 
 import (
 	"fmt"
-	"gin-starter/internal/utils/glog"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
+	"web-starter/internal/utils/glog"
 )
 
-func ErrorLogger() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func ErrorLogger() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			// 获取请求信息
+			method := c.Request().Method
+			url := c.Request().URL.String()
+			statusCode := c.Response().Status
 
-		// 获取请求信息
-		method := c.Request.Method
-		url := c.Request.RequestURI
-		statusCode := c.Writer.Status()
+			// 记录日志
+			if statusCode >= 500 {
+				glog.Log.Error(fmt.Sprintf("【ErrorLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
+			}
 
-		// 记录日志
-		if statusCode >= 500 {
-			glog.Log.Error(fmt.Sprintf("【ErrorLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
+			// 继续执行后续的中间件和路由
+			return next(c)
 		}
-
-		// 继续执行后续的中间件和路由
-		c.Next()
 	}
 }

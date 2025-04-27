@@ -1,31 +1,30 @@
 package resp
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
-func Success(c *gin.Context, msg string, data any) {
-	c.JSON(http.StatusOK, gin.H{
+func Success(c echo.Context, msg string, data any) error {
+	return c.JSON(http.StatusOK, map[string]any{
 		"code": 2000,
 		"msg":  msg,
 		"data": data,
 	})
-	c.Abort()
 }
-func Error(c *gin.Context, msg string, data any) {
-	c.JSON(http.StatusOK, gin.H{
+
+func Error(c echo.Context, msg string, data any) error {
+	return c.JSON(http.StatusOK, map[string]any{
 		"code": 5000,
 		"msg":  msg,
 		"data": data,
 	})
-	c.Abort()
 }
-func ErrorAuth(c *gin.Context) {
-	c.JSON(http.StatusUnauthorized, gin.H{
+
+func ErrorAuth(c echo.Context) error {
+	return c.JSON(http.StatusUnauthorized, map[string]any{
 		"code": 4001,
 		"msg":  "认证不通过",
 		"data": nil,
 	})
-	c.Abort()
 }

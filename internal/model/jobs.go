@@ -1,9 +1,9 @@
 package model
 
 import (
-	"gin-starter/internal/utils/db"
-	"gin-starter/internal/utils/glog"
 	"time"
+	"web-starter/internal/utils/db"
+	"web-starter/internal/utils/glog"
 )
 
 type CronJob struct {

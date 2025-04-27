@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"gin-starter/internal/config"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
+	"web-starter/internal/config"
 )
 
 // CustomClaims 自定义声明类型 并内嵌jwt.RegisteredClaims
@@ -29,7 +29,7 @@ func GenToken(userID string) (string, error) {
 		userID, // 自定义的用户名字段
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenExpire)),
-			Issuer:    "gin-starter", // 签发人
+			Issuer:    "web-starter", // 签发人
 		},
 	}
 	// 使用指定的签名方法创建签名对象

@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"gin-starter/internal/config"
 	"sync"
 	"time"
+	"web-starter/internal/config"
 
 	"github.com/go-redis/redis/v8"
 )

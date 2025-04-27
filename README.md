@@ -1,7 +1,7 @@
-# gin-starter
+# web-starter
 
 #### 介绍
-gin脚手架，集成常用web开发工具
+脚手架，集成常用web开发工具
 - 日志：支持压缩、按时间轮转、按体积轮转
 - kafka客户端
 - es客户端

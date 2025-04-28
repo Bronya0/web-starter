@@ -11,6 +11,7 @@ import (
 // addPublicRouter  公开的路由
 func addPublicRouter(e *echo.Echo) *echo.Echo {
 	e.GET("/", func(c echo.Context) error {
+
 		return c.JSON(http.StatusOK, map[string]string{
 			"love you": time.Now().Format(time.DateTime),
 		})

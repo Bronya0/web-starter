@@ -1,6 +1,7 @@
 package router
 
 import (
+	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	echoMW "github.com/labstack/echo/v4/middleware"
@@ -13,7 +14,7 @@ import (
 
 // InitServer 加载配置文件的端口，启动echo服务，同时初始化路由
 func InitServer() {
-	e := Create()
+	e := NewEcho()
 
 	cfg := config.Conf.Server
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
@@ -29,7 +30,7 @@ func InitServer() {
 }
 
 // Create 注册通用的路由
-func Create() *echo.Echo {
+func NewEcho() *echo.Echo {
 	e := New()
 	// 放中间件前的路由,无需认证
 	addPublicRouter(e)
@@ -52,6 +53,7 @@ func New() *echo.Echo {
 		echoMW.CSRF(),
 		echoMW.Secure(),
 	)
+	e.HTTPErrorHandler = echoErrorHandler
 
 	// 根据配置文件的debug初始化echo路由
 	if config.Conf.Server.Debug == false {
@@ -104,4 +106,32 @@ func echoRecover() echo.MiddlewareFunc {
 			return resp.Error(c, "内部服务错误", nil)
 		},
 	})
+}
+
+// echoErrorHandler 统一错误处理
+func echoErrorHandler(err error, c echo.Context) {
+	if c.Response().Committed {
+		return
+	}
+	// Send response
+	code := http.StatusInternalServerError
+	var he *echo.HTTPError
+	if errors.As(err, &he) {
+		code = he.Code
+	}
+
+	glog.Log.Errorf("%+v", err)
+
+	if c.Request().Method == http.MethodHead { // Issue #608
+		err = c.NoContent(code)
+	} else {
+		err = c.JSON(code, map[string]any{
+			"code": code,
+			"msg":  "内部错误，详情见日志",
+			"data": nil,
+		})
+	}
+	if err != nil {
+		glog.Log.Error(err.Error())
+	}
 }

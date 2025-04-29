@@ -19,8 +19,8 @@ var (
 )
 
 func InitConfig() {
-	confFile := "server.yaml"
-	initConfig(Conf, filepath.Join(common.RootPath, "conf", confFile), "yaml")
+	confFile := "server.toml"
+	initConfig(Conf, filepath.Join(common.RootPath, "conf", confFile), "toml")
 }
 
 // initConfig 将配置文件映射城结构体
@@ -53,70 +53,70 @@ func initConfig(c any, configPath, confType string) {
 }
 
 type Config struct {
-	Server    Server    `yaml:"Server"`
-	DB        DB        `yaml:"Db"`
-	Redis     Redis     `yaml:"Redis"`
-	Log       Logs      `yaml:"Log"`
-	Jwt       Jwt       `yaml:"Jwt"`
-	Websocket Websocket `yaml:"Websocket"`
-	Mail      Mail      `yaml:"Mail"`
+	Server    Server    `toml:"Server"`
+	DB        DB        `toml:"Db"`
+	Redis     Redis     `toml:"Redis"`
+	Log       Logs      `toml:"Log"`
+	Jwt       Jwt       `toml:"Jwt"`
+	Websocket Websocket `toml:"Websocket"`
+	Mail      Mail      `toml:"Mail"`
 }
 
 type Server struct {
-	Debug        bool   `yaml:"Debug"`
-	Host         string `yaml:"Host"`
-	Port         int    `yaml:"Port"`
-	ReadTimeout  int    `yaml:"ReadTimeout"`
-	WriteTimeout int    `yaml:"WriteTimeout"`
-	IdleTimeout  int    `yaml:"IdleTimeout"`
+	Debug        bool   `toml:"Debug"`
+	Host         string `toml:"Host"`
+	Port         int    `toml:"Port"`
+	ReadTimeout  int    `toml:"ReadTimeout"`
+	WriteTimeout int    `toml:"WriteTimeout"`
+	IdleTimeout  int    `toml:"IdleTimeout"`
 }
 
 type DB struct {
-	Enable        bool   `yaml:"Enable"`
-	Type          string `yaml:"Type"`
-	DSN           string `yaml:"DSN"`
-	MaxLifetime   int    `yaml:"MaxLifetime"`
-	MaxIdletime   int    `yaml:"MaxIdletime"`
-	MaxOpenConns  int    `yaml:"MaxOpenConns"`
-	MaxIdleConns  int    `yaml:"MaxIdleConns"`
-	SlowThreshold int    `yaml:"SlowThreshold"`
+	Enable        bool   `toml:"Enable"`
+	Type          string `toml:"Type"`
+	DSN           string `toml:"DSN"`
+	MaxLifetime   int    `toml:"MaxLifetime"`
+	MaxIdletime   int    `toml:"MaxIdletime"`
+	MaxOpenConns  int    `toml:"MaxOpenConns"`
+	MaxIdleConns  int    `toml:"MaxIdleConns"`
+	SlowThreshold int    `toml:"SlowThreshold"`
 }
 
 type Logs struct {
-	Level string `yaml:"Level"`
-	Path  string `yaml:"Path"`
+	Level string `toml:"Level"`
+	Path  string `toml:"Path"`
 }
 
 type Redis struct {
-	Host         string `yaml:"Host"`
-	Port         int    `yaml:"Port"`
-	Password     string `yaml:"Password"`
-	DB           int    `yaml:"Db"`
-	MaxIdle      int    `yaml:"MaxIdle"`
-	MaxActive    int    `yaml:"MaxActive"`
-	IdleTimeout  int    `yaml:"IdleTimeout"`
-	PoolSize     int    `yaml:"PoolSize"`
-	MinIdleConns int    `yaml:"MinIdleConns"`
+	Host         string `toml:"Host"`
+	Port         int    `toml:"Port"`
+	Password     string `toml:"Password"`
+	DB           int    `toml:"Db"`
+	MaxIdle      int    `toml:"MaxIdle"`
+	MaxActive    int    `toml:"MaxActive"`
+	IdleTimeout  int    `toml:"IdleTimeout"`
+	PoolSize     int    `toml:"PoolSize"`
+	MinIdleConns int    `toml:"MinIdleConns"`
 }
 
 type Jwt struct {
-	JwtTokenSignKey string `yaml:"JwtTokenSignKey"`
-	ExpiresTime     string `json:"ExpiresTime" yaml:"ExpiresTime"` // 过期时间
+	JwtTokenSignKey string `toml:"JwtTokenSignKey"`
+	ExpiresTime     string `json:"ExpiresTime" toml:"ExpiresTime"` // 过期时间
 }
 
 type Websocket struct {
-	ReadDeadline          int `yaml:"ReadDeadline"`
-	WriteDeadline         int `yaml:"WriteDeadline"`
-	Start                 int `yaml:"Start"`
-	WriteReadBufferSize   int `yaml:"WriteReadBufferSize"`
-	MaxMessageSize        int `yaml:"MaxMessageSize"`
-	PingPeriod            int `yaml:"PingPeriod"`
-	HeartbeatFailMaxTimes int `yaml:"HeartbeatFailMaxTimes"`
+	ReadDeadline          int `toml:"ReadDeadline"`
+	WriteDeadline         int `toml:"WriteDeadline"`
+	Start                 int `toml:"Start"`
+	WriteReadBufferSize   int `toml:"WriteReadBufferSize"`
+	MaxMessageSize        int `toml:"MaxMessageSize"`
+	PingPeriod            int `toml:"PingPeriod"`
+	HeartbeatFailMaxTimes int `toml:"HeartbeatFailMaxTimes"`
 }
 
 type Mail struct {
-	Host     string `yaml:"Host"`
-	Port     int    `yaml:"Port"`
-	Username string `yaml:"Username"`
-	Password string `yaml:"Password"`
+	Host     string `toml:"Host"`
+	Port     int    `toml:"Port"`
+	Username string `toml:"Username"`
+	Password string `toml:"Password"`
 }

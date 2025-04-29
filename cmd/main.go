@@ -8,10 +8,6 @@ import (
 	"web-starter/internal/utils/glog"
 )
 
-//go:generate go env -w GO111MODULE=on
-//go:generate go env -w GOPROXY=https://goproxy.cn,direct
-//go:generate go mod tidy
-
 func main() {
 	config.InitConfig() // 配置
 	glog.InitLogger()   // log

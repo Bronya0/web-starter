@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -ldflags="-w -s" -o /app/server /app/main.go
+    go build -ldflags="-w -s" -o /app/server ./cmd/main.go
 
 # ---- 最终阶段 ----
 FROM alpine:3.18
@@ -28,8 +28,9 @@ RUN apk update && apk add --no-cache \
 WORKDIR /app
 RUN chown appuser:appgroup /app
 
-# 复制二进制文件并设置所有权
+# 从构建阶段复制二进制文件和必要的配置文件
 COPY --from=builder --chown=appuser:appgroup /app/server /app/server
+COPY --from=builder --chown=appuser:appgroup /app/conf /app/conf
 
 # 切换到非 root 用户
 USER appuser

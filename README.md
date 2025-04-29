@@ -3,6 +3,10 @@
 #### 介绍
 脚手架，集成常用web开发工具
 - http框架：echo（不太喜欢gin）
+- 主协程崩溃恢复
+- RequestID
+- CSRF防御
+- XSS防御
 - 日志：支持压缩、按时间轮转、按体积轮转
 - kafka客户端
 - es客户端
@@ -11,7 +15,6 @@
 - 支持定时任务
 - gorm数据库
 - jwt
-- trace id
 - 路由区分公开api和认证api
 - 邮件发送
 

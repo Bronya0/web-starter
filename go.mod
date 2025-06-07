@@ -12,7 +12,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0
 	github.com/klauspost/compress v1.18.0
-	github.com/labstack/echo/v4 v4.13.3
+	github.com/labstack/echo/v4 v4.13.4
 	github.com/pierrec/lz4/v4 v4.1.22
 	github.com/spf13/viper v1.20.1
 	github.com/twmb/franz-go v1.18.1

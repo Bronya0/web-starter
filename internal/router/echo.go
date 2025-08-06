@@ -87,10 +87,9 @@ func echoLogger() echo.MiddlewareFunc {
 		HandleError: true, // 转发错误到全局错误处理器
 		LogValuesFunc: func(c echo.Context, v echoMW.RequestLoggerValues) error {
 			if v.Error != nil {
-				glog.Log.Error(fmt.Sprintf(`| %v | %v | %v "%v" | %v`, v.Status, v.Latency, v.Method, v.URI, v.Error.Error()))
+				glog.Log.Errorf(`| %v | %v | %v | %v "%v" | %v`, v.Status, v.RemoteIP, v.Latency, v.Method, v.URI, v.Error.Error())
 			} else {
-				glog.Log.Info(fmt.Sprintf(`| %v | %v | %v "%v"`, v.Status, v.Latency, v.Method, v.URI))
-
+				glog.Log.Infof(`| %v | %v | %v | %v "%v"`, v.Status, v.RemoteIP, v.Latency, v.Method, v.URI)
 			}
 			return nil
 		},

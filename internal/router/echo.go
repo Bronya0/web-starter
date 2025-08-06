@@ -83,6 +83,7 @@ func echoLogger() echo.MiddlewareFunc {
 		LogProtocol:     true,
 		LogLatency:      true, // 接口耗时
 		LogResponseSize: true,
+		LogRemoteIP:     true,
 		//LogRequestID:    true,
 		HandleError: true, // 转发错误到全局错误处理器
 		LogValuesFunc: func(c echo.Context, v echoMW.RequestLoggerValues) error {

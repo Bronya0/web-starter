@@ -3,13 +3,14 @@ package router
 import (
 	"errors"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	echoMW "github.com/labstack/echo/v4/middleware"
 	"net/http"
 	"time"
 	"web-starter/internal/config"
 	"web-starter/internal/model/resp"
 	"web-starter/internal/utils/glog"
+
+	"github.com/labstack/echo/v4"
+	echoMW "github.com/labstack/echo/v4/middleware"
 )
 
 // InitServer 加载配置文件的端口，启动echo服务，同时初始化路由

@@ -1,9 +1,10 @@
 package glog
 
 import (
-	"github.com/donnie4w/go-logger/logger"
 	"log"
 	"web-starter/internal/config"
+
+	"github.com/donnie4w/go-logger/logger"
 )
 
 var (
@@ -11,11 +12,11 @@ var (
 )
 
 func InitLogger() {
-	Log = initLogger(config.Conf.Log.Path)
+	Log = NewLogger(config.Conf.Log.Path)
 }
 
-// InitLogger pathFile: 日志全路径
-func initLogger(path string) *logger.Logging {
+// NewLogger pathFile: 日志全路径
+func NewLogger(path string) *logger.Logging {
 	log.Println("初始化日志……" + path)
 	l := logger.NewLogger()
 	l.SetOption(&logger.Option{

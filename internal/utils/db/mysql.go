@@ -18,10 +18,10 @@ func (m *Mysql) NewDB(dsn string) *gorm.DB {
 	}
 	db, err := gorm.Open(mysql.New(mysqlConfig), m.gormConfig)
 	if err != nil {
-		glog.Log.Error(err)
+		glog.Logger.Error(err)
 		panic(err)
 	} else {
-		glog.Log.Info("数据库连接成功...")
+		glog.Logger.Info("数据库连接成功...")
 	}
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
 

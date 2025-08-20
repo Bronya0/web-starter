@@ -28,5 +28,5 @@ func AutoMigrateJobs() {
 	if err != nil {
 		panic("自动迁移失败: " + err.Error())
 	}
-	glog.Log.Info("自动迁移成功")
+	glog.Logger.Info("自动迁移成功")
 }

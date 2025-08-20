@@ -19,10 +19,10 @@ func (p *PgSql) NewDB(dsn string) *gorm.DB {
 	db, err := gorm.Open(postgres.New(pgsqlConfig), p.gormConfig)
 
 	if err != nil {
-		glog.Log.Error(err)
+		glog.Logger.Error(err)
 		panic(err)
 	} else {
-		glog.Log.Info("数据库连接成功...")
+		glog.Logger.Info("数据库连接成功...")
 	}
 
 	return db

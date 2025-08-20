@@ -26,8 +26,8 @@ func InitServer() {
 		WriteTimeout: time.Duration(cfg.WriteTimeout) * time.Second,
 		IdleTimeout:  time.Duration(cfg.IdleTimeout) * time.Second,
 	}
-	glog.Log.Info("欢迎主人！服务运行地址：http://", addr)
-	glog.Log.Fatal(e.StartServer(srv))
+	glog.Logger.Info("欢迎主人！服务运行地址：http://", addr)
+	glog.Logger.Fatal(e.StartServer(srv))
 }
 
 // Create 注册通用的路由
@@ -58,9 +58,9 @@ func New() *echo.Echo {
 
 	// 根据配置文件的debug初始化echo路由
 	if config.Conf.Server.Debug == false {
-		glog.Log.Info("【生产模式】")
+		glog.Logger.Info("【生产模式】")
 	} else {
-		glog.Log.Info("【调试模式】")
+		glog.Logger.Info("【调试模式】")
 	}
 	return e
 }
@@ -89,9 +89,9 @@ func echoLogger() echo.MiddlewareFunc {
 		HandleError: true, // 转发错误到全局错误处理器
 		LogValuesFunc: func(c echo.Context, v echoMW.RequestLoggerValues) error {
 			if v.Error != nil {
-				glog.Log.Errorf(`| %v | %v | %v | %v "%v" | %v`, v.RemoteIP, v.Status, v.Latency, v.Method, v.URI, v.Error.Error())
+				glog.Logger.Errorf(`| %v | %v | %v | %v "%v" | %v`, v.RemoteIP, v.Status, v.Latency, v.Method, v.URI, v.Error.Error())
 			} else {
-				glog.Log.Infof(`| %v | %v | %v | %v "%v"`, v.RemoteIP, v.Status, v.Latency, v.Method, v.URI)
+				glog.Logger.Infof(`| %v | %v | %v | %v "%v"`, v.RemoteIP, v.Status, v.Latency, v.Method, v.URI)
 			}
 			return nil
 		},
@@ -103,7 +103,7 @@ func echoRecover() echo.MiddlewareFunc {
 	return echoMW.RecoverWithConfig(echoMW.RecoverConfig{
 		StackSize: 2 << 10, // 2 KB
 		LogErrorFunc: func(c echo.Context, err error, stack []byte) error {
-			glog.Log.Errorf("内部服务错误: %v\n%s", err.Error(), string(stack))
+			glog.Logger.Errorf("内部服务错误: %v\n%s", err.Error(), string(stack))
 			return resp.Error(c, "内部服务错误", nil)
 		},
 	})
@@ -121,7 +121,7 @@ func echoErrorHandler(err error, c echo.Context) {
 		code = he.Code
 	}
 
-	glog.Log.Errorf("%+v", err)
+	glog.Logger.Errorf("%+v", err)
 
 	if c.Request().Method == http.MethodHead { // Issue #608
 		err = c.NoContent(code)
@@ -133,6 +133,6 @@ func echoErrorHandler(err error, c echo.Context) {
 		})
 	}
 	if err != nil {
-		glog.Log.Error(err.Error())
+		glog.Logger.Error(err.Error())
 	}
 }

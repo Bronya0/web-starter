@@ -10,6 +10,7 @@ IdleTimeout = 300 # keep-alive 超时时间
 Level = "DEBUG"
 Path = "./log/all.log"
 Db = "./log/gorm.log"
+Err = "./log/err.log"
 
 [Db]
 Enable = false

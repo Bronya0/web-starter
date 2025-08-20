@@ -2,12 +2,13 @@ package config
 
 import (
 	"fmt"
-	"github.com/duke-git/lancet/v2/fileutil"
-	"github.com/fsnotify/fsnotify"
-	"github.com/spf13/viper"
 	"log"
 	"path/filepath"
 	"web-starter/internal/common"
+
+	"github.com/duke-git/lancet/v2/fileutil"
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
 )
 
 /*
@@ -85,6 +86,8 @@ type DB struct {
 type Logs struct {
 	Level string `toml:"Level"`
 	Path  string `toml:"Path"`
+	Db    string `toml:"Db"`
+	Err   string `toml:"Err"`
 }
 
 type Redis struct {

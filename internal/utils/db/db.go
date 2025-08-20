@@ -22,7 +22,7 @@ func InitDB() {
 	if config.Conf.DB.Enable {
 		DB = initGorm()
 	} else {
-		glog.Log.Warn("数据库未启用...")
+		glog.Logger.Warn("数据库未启用...")
 	}
 }
 
@@ -67,7 +67,7 @@ func newGormLogger() gormLog.Interface {
 		&CustomWriter{},
 		gormLog.Config{
 			SlowThreshold:             time.Duration(config.Conf.DB.SlowThreshold) * time.Second, // Slow SQL threshold
-			LogLevel:                  gormLog.Warn,                                              // Log level
+			LogLevel:                  gormLog.Warn,                                              // Logger level
 			IgnoreRecordNotFoundError: true,                                                      // 记录日志时会忽略ErrRecordNotFound错误
 			ParameterizedQueries:      true,                                                      // 不会在SQL日志中记录参数值，这有助于保护敏感信息不被记录在日志中。
 			Colorful:                  true,                                                      // 如果设置为true，日志将以彩色显示，这有助于在终端中快速区分不同级别的日志。
@@ -83,13 +83,13 @@ func (l CustomWriter) Printf(strFormat string, args ...any) {
 	logRes := fmt.Sprintf(strFormat, args...)
 	logFlag := "gorm日志:"
 	if strings.HasPrefix(strFormat, "[info]") || strings.HasPrefix(strFormat, "[traceStr]") {
-		glog.Log.Info(logRes)
+		glog.Logger.Info(logRes)
 	} else if strings.HasPrefix(strFormat, "[error]") || strings.HasPrefix(strFormat, "[traceErr]") {
-		glog.Log.Error(logFlag, logRes)
+		glog.Logger.Error(logFlag, logRes)
 	} else if strings.HasPrefix(strFormat, "[warn]") || strings.HasPrefix(strFormat, "[traceWarn]") {
-		glog.Log.Warn(logFlag, logRes)
+		glog.Logger.Warn(logFlag, logRes)
 	} else {
-		glog.Log.Info(logFlag, logRes)
+		glog.Logger.Info(logFlag, logRes)
 	}
 
 }

@@ -55,10 +55,10 @@ func addJob(s *gocron.Scheduler, jobName string, crontab string, function any, p
 	)
 
 	if err != nil {
-		glog.Log.Errorf("定时任务注册失败！: %v：%v", jobName, err)
+		glog.Logger.Errorf("定时任务注册失败！: %v：%v", jobName, err)
 		panic(err)
 	}
-	glog.Log.Infof("定时任务: %v 注册成功", jobName)
+	glog.Logger.Infof("定时任务: %v 注册成功", jobName)
 }
 
 func initScheduler() *gocron.Scheduler {
@@ -67,7 +67,7 @@ func initScheduler() *gocron.Scheduler {
 		gocron.WithGlobalJobOptions(),
 	)
 	if err != nil {
-		glog.Log.Errorf("initScheduler失败！: %v", err)
+		glog.Logger.Errorf("initScheduler失败！: %v", err)
 		panic("initScheduler失败！: " + err.Error())
 	}
 	return &s
@@ -76,7 +76,7 @@ func initScheduler() *gocron.Scheduler {
 func start(s *gocron.Scheduler) {
 	scheduler := *s
 	scheduler.Start()
-	glog.Log.Info("定时任务启动成功...")
+	glog.Logger.Info("定时任务启动成功...")
 }
 
 // saveOrUpdate 保存job or 更新
@@ -104,7 +104,7 @@ func saveOrUpdate(jobName, crontab string, fun any) {
 	}
 	result := db.DB.Where("name = ?", jobName).Create(cronJob)
 	if result.Error != nil {
-		glog.Log.Errorf("任务记录创建失败: %v", result.Error)
+		glog.Logger.Errorf("任务记录创建失败: %v", result.Error)
 		panic(result.Error)
 	}
 }
@@ -112,7 +112,7 @@ func saveOrUpdate(jobName, crontab string, fun any) {
 // beforeListener  任务运行前执行
 func beforeListener() gocron.EventListener {
 	return gocron.BeforeJobRuns(func(jobID uuid.UUID, jobName string) {
-		glog.Log.Infof("Job %s is start running...", jobName)
+		glog.Logger.Infof("Job %s is start running...", jobName)
 
 		if !config.Conf.DB.Enable {
 			return
@@ -128,7 +128,7 @@ func beforeListener() gocron.EventListener {
 // afterListener  用于监听作业何时运行且没有错误，然后运行提供的函数。
 func afterListener() gocron.EventListener {
 	return gocron.AfterJobRuns(func(jobID uuid.UUID, jobName string) {
-		glog.Log.Infof("Job %s is running end", jobName)
+		glog.Logger.Infof("Job %s is running end", jobName)
 
 		if !config.Conf.DB.Enable {
 			return
@@ -146,7 +146,7 @@ func afterListener() gocron.EventListener {
 // panicListener  panic监听器
 func panicListener() gocron.EventListener {
 	return gocron.AfterJobRunsWithPanic(func(jobID uuid.UUID, jobName string, recoverData any) {
-		glog.Log.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
+		glog.Logger.Errorf("Job Panic！！！：jobName: %s jobID: (%s): %+v\n", jobName, jobID, recoverData)
 
 		if !config.Conf.DB.Enable {
 			return

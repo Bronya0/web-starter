@@ -1,8 +1,0 @@
-.git
-.gitignore
-.gitmodules
-.vscode
-.idea
-*.swp
-*.swo
-*.log

@@ -1,20 +1,13 @@
-package glog
+package main
 
 import (
-	"web-starter/internal/config"
-
 	logging "github.com/donnie4w/go-logger/logger"
 )
 
 var (
-	errLogger *logging.Logging
-	Logger    *logging.Logging
+	Logger    = InitAllLogger("./logs/all.log")
+	errLogger = InitErrLogger("./logs/err.log")
 )
-
-func InitLogger() {
-	errLogger = InitErrLogger(config.Conf.Log.Err)
-	Logger = InitAllLogger(config.Conf.Log.Path)
-}
 
 // InitAllLogger 全部日志
 func InitAllLogger(path string) *logging.Logging {

@@ -1,0 +1,6 @@
+# https://ysboke.cn/tool/yaml2go
+debug: true
+serve:
+  port: 8083
+db:
+  enable: false

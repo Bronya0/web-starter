@@ -5,8 +5,8 @@ import (
 )
 
 var (
-	Logger    = InitAllLogger("./logs/all.log")
-	errLogger = InitErrLogger("./logs/err.log")
+	Logger    = InitAllLogger("./log/all.log")
+	errLogger = InitErrLogger("./log/err.log")
 )
 
 // InitAllLogger 全部日志

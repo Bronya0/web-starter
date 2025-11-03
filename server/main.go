@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"web-starter/server/handler"
+	"web-starter/server/api"
 	"web-starter/server/pkg"
 
 	"github.com/go-playground/validator/v10"
@@ -33,7 +33,7 @@ func main() {
 	// ================ API ===================
 	g := e.Group("")
 
-	restApi := &handler.RestApi{}
+	restApi := &api.RestApi{}
 	g.GET("/:id", restApi.Get)
 	g.POST("/post", restApi.Post)
 
